@@ -82,7 +82,6 @@ setup(
     install_requires=['aiohttp==0.21.6',
                       'cchardet==1.0.0',
                       'chardet==2.3.0',
-                      'gunicorn==19.6.0',
                       'redis==2.10.5'],
 
     # List additional groups of dependencies here (e.g. development
