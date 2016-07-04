@@ -17,13 +17,21 @@ here = path.abspath(path.dirname(__file__))
 #     long_description = f.read()
 long_description = ""
 
+with open(path.join(here, 'requirements.txt'),
+          encoding='utf-8') as fp:
+    requirements = list(filter(lambda x: bool(str(x).strip()),
+                               fp.read().split("\n")))
+
+with open(path.join(here, 'VERSION'), encoding='utf-8') as fp:
+    version = str(fp.read()).strip()
+
 setup(
-    name='wssample',
+    name='poc',
 
     # Versions should comply with PEP440.  For a discussion on single-sourcing
     # the version across setup.py and the project code, see
     # https://packaging.python.org/en/latest/single_source_version.html
-    version='1.0.0',
+    version=version,
 
     description='A sample aiohttp project',
     long_description=long_description,
@@ -33,7 +41,7 @@ setup(
 
     # Author details
     author='Tao Li',
-    author_email='tao_9900@gmail.com',
+    author_email='tao.9900@gmail.com',
 
     # Choose your license
     license='MIT',
@@ -65,7 +73,7 @@ setup(
     ],
 
     # What does your project relate to?
-    keywords='sample setuptools development',
+    # keywords='sample setuptools development',
 
     # You can just specify the packages manually here if your project is
     # simple. Or you can use find_packages().
@@ -79,10 +87,7 @@ setup(
     # your project is installed. For an analysis of "install_requires" vs pip's
     # requirements files see:
     # https://packaging.python.org/en/latest/requirements.html
-    install_requires=['aiohttp==0.21.6',
-                      'cchardet==1.0.0',
-                      'chardet==2.3.0',
-                      'redis==2.10.5'],
+    install_requires=requirements,
 
     # List additional groups of dependencies here (e.g. development
     # dependencies). You can install these using the following syntax,
