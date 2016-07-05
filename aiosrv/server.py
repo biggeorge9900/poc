@@ -1,15 +1,27 @@
 import argparse
 from aiohttp import web
 from aiosrv.handlers.hello_world import hello
+from aiosrv.redis import Redis
 
 ROUTES = [["GET", "/", hello]]
 
 
-def init():
-    app = web.Application()
-    for route in ROUTES:
-        app.router.add_route(*route)
-    return app
+class MyServer(object):
+
+    def init(self):
+        app = web.Application()
+        for route in ROUTES:
+            app.router.add_route(*route)
+        app.on_shutdown.append(self.on_shutdown)
+        app.loop.run_until_complete(self.on_startup())
+        return app
+
+    async def on_startup(self):
+        await Redis().initialize()
+        return await Redis().set("mytest", "Hola World!")
+
+    async def on_shutdown(self, app):
+        Redis().close_connections()
 
 
 def main():
@@ -23,7 +35,8 @@ def main():
                    default=8080,
                    required=False)
     args = p.parse_args()
-    web.run_app(init(), host=args.host, port=args.port)
+    srv = MyServer()
+    web.run_app(srv.init(), host=args.host, port=args.port)
 
 if __name__ == "__main__":
     main()
