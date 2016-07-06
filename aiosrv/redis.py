@@ -66,6 +66,9 @@ class Redis(object):
     async def set(self, key, value):
         return await self._connection.set(key, value)
 
+    async def delete(self, key):
+        return await self._connection.delete(key)
+
     def close_connections(self):
         if self._connection:
             self._connection.close()

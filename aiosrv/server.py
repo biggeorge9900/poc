@@ -2,6 +2,7 @@ import argparse
 from aiohttp import web
 from aiosrv.handlers.hello_world import hello
 from aiosrv.redis import Redis
+from potato.mainstream import AioMainStream, AioMainStreamQueue
 
 ROUTES = [["GET", "/", hello]]
 
@@ -18,10 +19,13 @@ class MyServer(object):
 
     async def on_startup(self):
         await Redis().initialize()
+        AioMainStream().initialize([("localhost", 6379)])
+        await AioMainStreamQueue("testq1").enqueue("TestValue1:Hello!", expires=1)
         return await Redis().set("mytest", "Hola World!")
 
     async def on_shutdown(self, app):
         Redis().close_connections()
+        AioMainStream().close_connections()
 
 
 def main():
